@@ -76,7 +76,7 @@
 - Goal（目標）
   - id, title, description, user_id, status（未着手:Not started, 進行中:Active goals, 達成済:Completed goals）, target_date, created_at, updated_at
 - StudyRecord（学習記録）
-  - id, goal_id, content, duration_hours(int:分単位), recorded_at
+  - id, goal_id, content, duration_minutes(int:分単位), recorded_at
 ### 可能な拡張機能（将来的に）
   - Discord Bot連携して、メッセージを自動で取り込む（初期は手動でOK）
   - 学習記録のCSV出力

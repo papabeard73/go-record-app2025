@@ -30,10 +30,10 @@
                 <div class="flex flex-wrap justify-between gap-3 p-4">
                     <p class="text-[#1b0e0e] tracking-light text-[32px] font-bold leading-tight min-w-72">My Goals</p>
                 </div>
-                {{ range . }}
-                {{ if eq .Status "NotStarted" }}
+
                 <!-- Not Started -->
                 <h3 class="text-[#1b0e0e] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-0 pt-5 mt-5">Not Started</h3>
+                {{ range .NotStarted }}
                 <div class="md:flex items-center gap-4 bg-[#fcf8f8] px-4 min-h-[72px] py-2 justify-between">
                     <div class="flex items-center gap-4">
                         <div class="text-[#1b0e0e] flex items-center justify-center rounded-lg bg-[#f3e7e8] shrink-0 size-12" data-icon="Trophy" data-size="24px" data-weight="regular">
@@ -52,11 +52,13 @@
                         </div>
                     </div>
                 </div>
+                {{ end }}
                 <!-- /Not Started -->
 
-                {{ else if eq .Status "ActiveGoals" }}
+
                 <!-- Active Goals -->
                 <h3 class="text-[#1b0e0e] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-0 pt-5 mt-5">Active Goals</h3>
+                {{ range .ActiveGoals }}
                 <div class="md:flex items-center gap-4 bg-[#fcf8f8] px-4 min-h-[72px] py-2 justify-between">
                     <div class="flex items-center gap-4">
                         <div class="text-[#1b0e0e] flex items-center justify-center rounded-lg bg-[#f3e7e8] shrink-0 size-12" data-icon="Trophy" data-size="24px" data-weight="regular">
@@ -78,10 +80,12 @@
                         </div>
                     </div>
                 </div>
+                {{ end }}
                 <!-- / Active Goals -->
-                {{ else if eq .Status "CompletedGoals" }}
+
                 <!-- Completed Goals -->
                 <h3 class="text-[#1b0e0e] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-0 pt-5 mt-5">Completed Goals</h3>
+                {{ range .CompletedGoals }}
                 <div class="md:flex items-center gap-4 bg-[#fcf8f8] px-4 min-h-[72px] py-2 justify-between">
                     <div class="flex items-center gap-4">
                         <div class="text-[#1b0e0e] flex items-center justify-center rounded-lg bg-[#f3e7e8] shrink-0 size-12" data-icon="Trophy" data-size="24px" data-weight="regular">
@@ -100,9 +104,9 @@
                         </div>
                     </div>
                 </div>
+                {{ end }}
                 <!-- / Completed Goals -->
-                {{ end }}
-                {{ end }}
+
                 <div class="flex justify-stretch mt-5">
                     <div class="flex flex-1 gap-3 flex-wrap px-4 py-3 justify-start">
                         <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#FE85AC] text-[#fcf8f8] text-sm font-bold leading-normal tracking-[0.015em]">
