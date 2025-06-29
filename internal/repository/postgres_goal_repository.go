@@ -10,10 +10,19 @@ type PostgresGoalRepository struct {
 	DB *sql.DB
 }
 
+// インスタンスを生成する関数
+// NewPostgresGoalRepositoryは、PostgresGoalRepositoryの新しいインスタンスを
+// 作成するための関数です。
 func NewPostgresGoalRepository(db *sql.DB) GoalRepository {
 	return &PostgresGoalRepository{DB: db}
 }
 
+// GetAllは、データベースからすべての目標を取得するメソッドです。
+// このメソッドは、目標のステータスごとに分類されたデータを返します。
+// 目標のステータスは、"NotStarted", "ActiveGoals", "CompletedGoals"の3つです。
+// 返り値は、model.GoalPageData型で、
+// 各ステータスごとに目標のスライスを含んでいます。
+// エラーが発生した場合は、エラーを返します
 func (r *PostgresGoalRepository) GetAll() (model.GoalPageData, error) {
 	rows, err := r.DB.Query("SELECT id, user_id, title, description, target_date, status FROM goals")
 	if err != nil {
@@ -21,14 +30,6 @@ func (r *PostgresGoalRepository) GetAll() (model.GoalPageData, error) {
 	}
 	defer rows.Close()
 
-	// var goals []model.Goal
-	// for rows.Next() {
-	// 	var g model.Goal
-	// 	if err := rows.Scan(&g.ID, &g.UserID, &g.Title, &g.Description, &g.TargetDate, &g.Status); err != nil {
-	// 		return nil, err
-	// 	}
-	// 	goals = append(goals, g)
-	// }
 	var allGoals []model.Goal
 	for rows.Next() {
 		var g model.Goal
@@ -51,4 +52,12 @@ func (r *PostgresGoalRepository) GetAll() (model.GoalPageData, error) {
 		}
 	}
 	return data, nil
+}
+
+func (r *PostgresGoalRepository) Create(goal model.Goal) error {
+	_, err := r.DB.Exec(`
+		INSERT INTO goals (user_id, title, description, target_date, status)
+		VALUES ($1, $2, $3, $4, $5)
+	`, goal.UserID, goal.Title, goal.Description, goal.TargetDate, goal.Status)
+	return err
 }

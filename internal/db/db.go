@@ -10,6 +10,7 @@ import (
 )
 
 func Open() *sql.DB {
+	// PostgreSQLデータベースに接続
 	dsn := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable",
 		getenv("DB_USER", "appuser"),
 		getenv("DB_PASSWORD", "apppass"),

@@ -9,14 +9,15 @@
     <link rel="stylesheet" as="style" onload="this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope%3Awght%40400%3B500%3B700%3B800&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" />
 
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+    <link rel="stylesheet" href="/static/css/style.css">
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
 
 <body>
-    <div class="relative flex size-full min-h-screen flex-col bg-[#fcf8f8] group/design-root overflow-x-hidden" style='font-family: Manrope, "Noto Sans", sans-serif;'>
+    <div class="relative flex size-full min-h-screen flex-col bg-[#fcf8f8] group/design-root overflow-x-hidden">
         <div class="layout-container flex h-full grow flex-col">
-            <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f3e7e8] px-10 py-3">
+            <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f3e7e8] px-10 py-3 font-English">
                 <div class="flex items-center gap-4 text-[#1b0e0e]">
                     <div class="size-4">
                         <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,12 +44,17 @@
             <div class="px-40 flex flex-1 justify-center py-5">
                 <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
                     <div class="flex flex-wrap justify-between gap-3 p-4">
-                        <p class="text-[#1b0e0e] tracking-light text-[32px] font-bold leading-tight min-w-72">My Goals</p>
+                        <p class="text-[#1b0e0e] tracking-light text-[32px] font-bold leading-tight min-w-72 font-English">My Goals</p>
+                        <div class="flex flex-1 gap-3 flex-wrap py-3 justify-end font-Japanese">
+                            <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#ea2832] text-[#fcf8f8] text-sm font-bold leading-normal tracking-[0.015em]">
+                                <span class="truncate">新しい目標を登録</span>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Not Started -->
-                    <h3 class="text-[#1b0e0e] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-0 pt-5 mt-5">Not Started</h3>
-                    <div class="md:flex items-center gap-4 bg-[#fcf8f8] px-4 min-h-[72px] py-2 justify-between">
+                    <h3 class="text-[#1b0e0e] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-0 pt-5 mt-5 font-English">Not Started</h3>
+                    <div class="md:flex items-center gap-4 bg-[#fcf8f8] px-4 min-h-[72px] py-2 justify-between font-Japanese">
                         <div class="flex items-center gap-4">
                             <div class="text-[#1b0e0e] flex items-center justify-center rounded-lg bg-[#f3e7e8] shrink-0 size-12" data-icon="Trophy" data-size="24px" data-weight="regular">
                                 <img src="/static/images/notStarted.svg" alt="SVGicon" />
@@ -69,8 +75,8 @@
                     <!-- /Not Started -->
 
                     <!-- Active Goals -->
-                    <h3 class="text-[#1b0e0e] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-0 pt-5 mt-5">Active Goals</h3>
-                    <div class="md:flex items-center gap-4 bg-[#fcf8f8] px-4 min-h-[72px] py-2 justify-between">
+                    <h3 class="text-[#1b0e0e] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-0 pt-5 mt-5 font-English">Active Goals</h3>
+                    <div class="md:flex items-center gap-4 bg-[#fcf8f8] px-4 min-h-[72px] py-2 justify-between font-Japanese">
                         <div class="flex items-center gap-4">
                             <div class="text-[#1b0e0e] flex items-center justify-center rounded-lg bg-[#f3e7e8] shrink-0 size-12" data-icon="Trophy" data-size="24px" data-weight="regular">
                                 <img src="/static/images/activeGoals.svg" alt="SVGicon" />
@@ -94,8 +100,8 @@
                     <!-- / Active Goals -->
 
                     <!-- Completed Goals -->
-                    <h3 class="text-[#1b0e0e] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-0 pt-5 mt-5">Completed Goals</h3>
-                    <div class="md:flex items-center gap-4 bg-[#fcf8f8] px-4 min-h-[72px] py-2 justify-between">
+                    <h3 class="text-[#1b0e0e] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-0 pt-5 mt-5 font-English">Completed Goals</h3>
+                    <div class="md:flex items-center gap-4 bg-[#fcf8f8] px-4 min-h-[72px] py-2 justify-between font-Japanese">
                         <div class="flex items-center gap-4">
                             <div class="text-[#1b0e0e] flex items-center justify-center rounded-lg bg-[#f3e7e8] shrink-0 size-12" data-icon="Trophy" data-size="24px" data-weight="regular">
                                 <img src="/static/images/completedGoals.svg" alt="SVGicon" />
@@ -114,7 +120,7 @@
                         </div>
                     </div>
                     <!-- / Completed Goals -->
-                    <div class="flex justify-stretch mt-5">
+                    <div class="flex justify-stretch mt-5 font-Japanese">
                         <div class="flex flex-1 gap-3 flex-wrap px-4 py-3 justify-start">
                             <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#FE85AC] text-[#fcf8f8] text-sm font-bold leading-normal tracking-[0.015em]">
                                 <span class="truncate">累計を見る</span>

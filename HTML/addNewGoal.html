@@ -6,6 +6,7 @@
 
     <title>Stitch Design</title>
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+    <link rel="stylesheet" href="/static/css/style.css">
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
@@ -43,24 +44,48 @@
             <div class="px-40 flex flex-1 justify-center py-5">
                 <div class="layout-content-container flex flex-col w-[512px] max-w-[512px] py-5 max-w-[960px] flex-1">
                     <div class="flex flex-wrap justify-between gap-3 p-4">
-                        <p class="text-[#171212] tracking-light text-[32px] font-bold leading-tight min-w-72">Add New Goal</p>
+                        <p class="text-[#171212] tracking-light text-[32px] font-bold leading-tight min-w-72 font-English">Add New Goal</p>
                     </div>
-                    <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                    <div class="flex max-w-[960px] flex-wrap items-end gap-4 px-4 py-3 font-Japanese">
                         <label class="flex flex-col min-w-40 flex-1">
-                            <p class="text-[#171212] text-base font-medium leading-normal pb-2">Goal Title</p>
-                            <input placeholder="e.g., Complete Math Textbook" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#171212] focus:outline-0 focus:ring-0 border border-[#e4dddd] bg-white focus:border-[#e4dddd] h-14 placeholder:text-[#826869] p-[15px] text-base font-normal leading-normal" value="" />
+                            <p class="text-[#171212] text-base font-medium leading-normal pb-2">目標のタイトル</p>
+                            <input placeholder="e.g., AWS SAAに合格する" required class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#171212] focus:outline-0 focus:ring-0 border border-[#e4dddd] bg-white focus:border-[#e4dddd] h-14 placeholder:text-[#826869] p-[15px] text-base font-normal leading-normal" value="" />
                         </label>
                     </div>
-                    <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                    <div class="flex max-w-[960px] flex-wrap items-end gap-4 px-4 py-3 font-Japanese">
                         <label class="flex flex-col min-w-40 flex-1">
-                            <p class="text-[#171212] text-base font-medium leading-normal pb-2">Description</p>
-                            <textarea placeholder="Describe your goal in detail" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#171212] focus:outline-0 focus:ring-0 border border-[#e4dddd] bg-white focus:border-[#e4dddd] min-h-36 placeholder:text-[#826869] p-[15px] text-base font-normal leading-normal"></textarea>
+                            <p class="text-[#171212] text-base font-medium leading-normal pb-2">目標達成日（yyyy-mm-dd）</p>
+                            <input placeholder="e.g., 2025-08-31" required class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#171212] focus:outline-0 focus:ring-0 border border-[#e4dddd] bg-white focus:border-[#e4dddd] h-14 placeholder:text-[#826869] p-[15px] text-base font-normal leading-normal" value="" />
+                        </label>
+                    </div>
+                    <div class="flex max-w-[960px] flex-wrap items-end gap-4 px-4 py-3 font-Japanese">
+                        <label class="flex flex-col min-w-40 flex-1">
+                            <p class="text-[#171212] text-base font-medium leading-normal pb-2">目標ステータス</p>
+                            <select class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#171212] focus:outline-0 focus:ring-0 border border-[#e4dddd] bg-white focus:border-[#e4dddd] placeholder:text-[#826869] p-[15px] text-base font-normal leading-normal">
+                                <option value="">選択してください</option>
+                                <option value="web">Not Started</option>
+                                <option value="mobile">Active Goals</option>
+                                <option value="design">Completed Goals</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="flex max-w-[960px] flex-wrap items-end gap-4 px-4 py-3 font-Japanese">
+                        <label class="flex flex-col min-w-40 flex-1">
+                            <p class="text-[#171212] text-base font-medium leading-normal pb-2">目標の説明</p>
+                            <textarea placeholder="目標についての説明を入力してください" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#171212] focus:outline-0 focus:ring-0 border border-[#e4dddd] bg-white focus:border-[#e4dddd] min-h-36 placeholder:text-[#826869] p-[15px] text-base font-normal leading-normal"></textarea>
                         </label>
                     </div>
                     <div class="flex px-4 py-3 justify-end">
-                        <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e9b8ba] text-[#171212] text-sm font-bold leading-normal tracking-[0.015em]">
-                            <span class="truncate">Register</span>
-                        </button>
+                        <div class="">
+                            <button class="flex min-w-[84px] max-w-[960px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#56423E] text-[#fcf8f8] text-sm font-bold leading-normal tracking-[0.015em]">
+                                <span class="truncate">登録せずに一覧に戻る</span>
+                            </button>
+                        </div>
+                        <div class="ml-3">
+                            <button class="flex min-w-[84px] max-w-[960px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#ea2832] text-[#fcf8f8] text-sm font-bold leading-normal tracking-[0.015em]">
+                                <span class="truncate">目標を登録</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

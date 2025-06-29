@@ -4,4 +4,5 @@ import "go-record-app2025/internal/model"
 
 type GoalRepository interface {
 	GetAll() (model.GoalPageData, error)
+	Create(goal model.Goal) error
 }
