@@ -23,38 +23,41 @@ func NewPostgresGoalRepository(db *sql.DB) GoalRepository {
 // 返り値は、model.GoalPageData型で、
 // 各ステータスごとに目標のスライスを含んでいます。
 // エラーが発生した場合は、エラーを返します
-func (r *PostgresGoalRepository) GetAll() (model.GoalPageData, error) {
+func (r *PostgresGoalRepository) GetAllGoals() ([]model.Goal, error) {
+	// main.goのsql.Openで取得した接続オブジェクトを使用して、データベースから目標を取得します
 	rows, err := r.DB.Query("SELECT id, user_id, title, description, target_date, status FROM goals")
 	if err != nil {
-		return model.GoalPageData{}, err
+		return nil, err
 	}
 	defer rows.Close()
 
-	var allGoals []model.Goal
+	var goals []model.Goal
 	for rows.Next() {
 		var g model.Goal
 		if err := rows.Scan(&g.ID, &g.UserID, &g.Title, &g.Description, &g.TargetDate, &g.Status); err != nil {
 			log.Fatal(err)
 		}
-		allGoals = append(allGoals, g)
+		goals = append(goals, g)
 	}
+
+	return goals, nil
 
 	// ステータスごとに分類
-	var data model.GoalPageData
-	for _, g := range allGoals {
-		switch g.Status {
-		case "NotStarted":
-			data.NotStarted = append(data.NotStarted, g)
-		case "ActiveGoals":
-			data.ActiveGoals = append(data.ActiveGoals, g)
-		case "CompletedGoals":
-			data.CompletedGoals = append(data.CompletedGoals, g)
-		}
-	}
-	return data, nil
+	// var data model.GoalPageData
+	// for _, g := range allGoals {
+	// 	switch g.Status {
+	// 	case "NotStarted":
+	// 		data.NotStarted = append(data.NotStarted, g)
+	// 	case "ActiveGoals":
+	// 		data.ActiveGoals = append(data.ActiveGoals, g)
+	// 	case "CompletedGoals":
+	// 		data.CompletedGoals = append(data.CompletedGoals, g)
+	// 	}
+	// }
+	// return data, nil
 }
 
-func (r *PostgresGoalRepository) Create(goal model.Goal) error {
+func (r *PostgresGoalRepository) SaveGoal(goal model.Goal) error {
 	_, err := r.DB.Exec(`
 		INSERT INTO goals (user_id, title, description, target_date, status)
 		VALUES ($1, $2, $3, $4, $5)

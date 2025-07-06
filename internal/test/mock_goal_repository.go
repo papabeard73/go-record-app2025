@@ -6,14 +6,15 @@ import (
 
 type MockGoalRepo struct{}
 
-func (m *MockGoalRepo) GetAll() (model.GoalPageData, error) {
-	return model.GoalPageData{
-		NotStarted: []model.Goal{
-			{ID: 1, Title: "モック目標1", Status: "NotStarted"},
-		},
-		ActiveGoals: []model.Goal{
-			{ID: 2, Title: "モック目標2", Status: "ActiveGoals"},
-		},
-		CompletedGoals: []model.Goal{},
+func (m *MockGoalRepo) GetAllGoals() ([]model.Goal, error) {
+	return []model.Goal{
+		{ID: 1, UserID: 1, Title: "Test Goal 1", Description: "Description 1", TargetDate: "2025-12-31", Status: "NotStarted"},
+		{ID: 2, UserID: 1, Title: "Test Goal 2", Description: "Description 2", TargetDate: "2025-12-31", Status: "ActiveGoals"},
+		{ID: 3, UserID: 1, Title: "Test Goal 3", Description: "Description 3", TargetDate: "2025-12-31", Status: "CompletedGoals"},
 	}, nil
+}
+
+func (m *MockGoalRepo) SaveGoal(goal model.Goal) error {
+	// テスト用なので何もしない or 必要ならモックの挙動を書く
+	return nil
 }

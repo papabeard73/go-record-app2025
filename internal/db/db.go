@@ -29,6 +29,14 @@ func Open() *sql.DB {
 	return db
 }
 
+func Close(db *sql.DB) {
+	if err := db.Close(); err != nil {
+		log.Println("DB切断失敗:", err)
+	} else {
+		log.Println("DB切断成功")
+	}
+}
+
 func getenv(k, def string) string {
 	if v := os.Getenv(k); v != "" {
 		return v

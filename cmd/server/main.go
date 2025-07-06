@@ -1,7 +1,7 @@
 package main
 
 import (
-	"database/sql"
+	"go-record-app2025/internal/db"
 	"go-record-app2025/internal/handler"
 	"go-record-app2025/internal/repository"
 	"go-record-app2025/internal/service"
@@ -22,15 +22,15 @@ func main() {
 	// ドライバのインポートは、_ "github.com/lib/pq"
 	// のようにアンダースコアで行うことで、パッケージの初期化を行います。
 	// このパッケージは、PostgreSQLのドライバを提供します。
-	db, err := sql.Open("postgres", "postgresql://appuser:apppass@localhost:5432/goalsdb?sslmode=disable")
-	if err != nil {
-		log.Fatal("DB接続失敗:", err)
-	}
-	// データベースの接続を確認
-	defer db.Close()
+	// db, err := sql.Open("postgres", "postgresql://appuser:apppass@localhost:5432/goalsdb?sslmode=disable")
+	database := db.Open()
+	// if err != nil {
+	// 	log.Fatal("DB接続失敗:", err)
+	// }
+	defer db.Close(database)
 
 	// データベースの接続を確認
-	repo := repository.NewPostgresGoalRepository(db)
+	repo := repository.NewPostgresGoalRepository(database)
 	// リポジトリを使用してサービスを初期化
 	svc := service.NewGoalService(repo)
 	// ハンドラーを初期化

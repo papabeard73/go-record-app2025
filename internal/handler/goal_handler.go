@@ -58,14 +58,22 @@ func (h *GoalHandler) AddNewGoals(w http.ResponseWriter, r *http.Request) {
 
 		goal := model.Goal{
 			Title:       r.FormValue("title"),
-			Description: r.FormValue("description"),
 			TargetDate:  r.FormValue("target_date"),
-			Status:      "NotStarted",
+			Status:      r.FormValue("status"),
+			Description: r.FormValue("description"),
 			UserID:      1, // 今は仮に固定
 		}
 
+		// デバッグ用
+		log.Println("title:", r.FormValue("title"))
+		log.Println("description:", r.FormValue("description"))
+		log.Println("target_date:", r.FormValue("target_date"))
+		log.Println("status:", r.FormValue("status"))
+		log.Printf("Received goal: %+v\n", goal)
+
 		err := h.GoalService.CreateGoal(goal)
 		if err != nil {
+			log.Println("CreateGoal error:", err)
 			http.Error(w, "登録失敗", http.StatusInternalServerError)
 			return
 		}
