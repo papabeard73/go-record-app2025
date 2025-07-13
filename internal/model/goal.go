@@ -14,3 +14,16 @@ type GoalPageData struct {
 	ActiveGoals    []Goal
 	CompletedGoals []Goal
 }
+
+type StudyRecord struct {
+	ID              int
+	GoalID          int
+	Content         string
+	DurationMinutes int
+	RecordedAt      string
+}
+type GoalDetailData struct {
+	Goal Goal
+	// 他の必要なフィールドを追加できます
+	StudyRecords []StudyRecord
+}

@@ -55,3 +55,14 @@ func (s *GoalService) GetGoals() (model.GoalPageData, error) {
 func (s *GoalService) CreateGoal(goal model.Goal) error {
 	return s.Repo.SaveGoal(goal)
 }
+
+// DetailGoalsは、特定の目標の詳細を取得するメソッドです。
+// このメソッドは、目標のIDを受け取り、リポジトリを通じて
+// データベースから目標の詳細を取得します。
+func (s *GoalService) DetailGoals(id int) (model.GoalDetailData, error) {
+	goal, err := s.Repo.GetGoalByID(id)
+	if err != nil {
+		return model.GoalDetailData{}, err
+	}
+	return goal, nil
+}

@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // GoalHandlerは、目標に関連するHTTPリクエストを処理するためのハンドラーです。
@@ -65,11 +66,11 @@ func (h *GoalHandler) AddNewGoals(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// デバッグ用
-		log.Println("title:", r.FormValue("title"))
-		log.Println("description:", r.FormValue("description"))
-		log.Println("target_date:", r.FormValue("target_date"))
-		log.Println("status:", r.FormValue("status"))
-		log.Printf("Received goal: %+v\n", goal)
+		// log.Println("title:", r.FormValue("title"))
+		// log.Println("description:", r.FormValue("description"))
+		// log.Println("target_date:", r.FormValue("target_date"))
+		// log.Println("status:", r.FormValue("status"))
+		// log.Printf("Received goal: %+v\n", goal)
 
 		err := h.GoalService.CreateGoal(goal)
 		if err != nil {
@@ -79,5 +80,35 @@ func (h *GoalHandler) AddNewGoals(w http.ResponseWriter, r *http.Request) {
 		}
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+}
+
+// DetailGoalsは、特定の目標の詳細を表示するハンドラー関数です。
+// この関数は、目標のIDをURLパラメータから取得し、その目標の詳細をGoalServiceを通じて取得します。
+// 取得した目標データは、HTMLテンプレートに渡され、最終的にHTTPレスポンスとしてクライアントに返されます。
+func (h *GoalHandler) DetailGoals(w http.ResponseWriter, r *http.Request) {
+	goalID := r.URL.Query().Get("id")
+	if goalID == "" {
+		http.Error(w, "目標IDが指定されていません", http.StatusBadRequest)
+		return
+	}
+	id, err := strconv.Atoi(goalID)
+	if err != nil {
+		http.Error(w, "無効な目標ID", http.StatusBadRequest)
+		return
+	}
+	goal, err := h.GoalService.DetailGoals(id)
+	if err != nil {
+		http.Error(w, "目標の詳細取得失敗", http.StatusInternalServerError)
+		return
+	}
+	tmpl := template.Must(template.New("layout.html").Funcs(template.FuncMap{
+		"eq": func(a, b string) bool { return a == b },
+	}).ParseFiles("templates/layout.html", "templates/goal_detail.html"))
+	err = tmpl.ExecuteTemplate(w, "layout.html", goal)
+	if err != nil {
+		http.Error(w, "テンプレート描画エラー", http.StatusInternalServerError)
+		log.Println("execute error:", err)
+		return
 	}
 }

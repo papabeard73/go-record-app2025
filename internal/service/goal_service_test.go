@@ -20,13 +20,16 @@ func TestGetGoals(t *testing.T) {
 	assert.Equal(t, "モック目標1", goals.NotStarted[0].Title)
 }
 
-func TestCreateGoal(t *testing.T) {
+func TestDetailGoals(t *testing.T) {
 	mockRepo := &test.MockGoalRepo{}
 	svc := service.NewGoalService(mockRepo)
 
-	goal := test.MockGoalData()[0]
-	err := svc.CreateGoal(goal)
+	goal, err := svc.DetailGoals(1)
 
 	assert.NoError(t, err)
-	assert.Equal(t, "モック目標1", goal.Title)
+	assert.Equal(t, "Mock Goal", goal.Goal.Title)
+	assert.Equal(t, "This is a mock goal for testing.", goal.Goal.Description)
+	assert.Len(t, goal.StudyRecords, 1)
+	assert.Equal(t, "Study content", goal.StudyRecords[0].Content)
+	assert.Equal(t, 30, goal.StudyRecords[0].DurationMinutes)
 }

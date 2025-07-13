@@ -18,3 +18,26 @@ func (m *MockGoalRepo) SaveGoal(goal model.Goal) error {
 	// テスト用なので何もしない or 必要ならモックの挙動を書く
 	return nil
 }
+
+func (m *MockGoalRepo) MockGoalData() error {
+	return nil
+}
+
+func (m *MockGoalRepo) GetGoalByID(id int) (model.GoalDetailData, error) {
+	// テスト用のダミー返却
+	return model.GoalDetailData{
+		Goal: model.Goal{
+			ID:          id,
+			UserID:      1,
+			Title:       "Mock Goal",
+			Description: "This is a mock goal for testing.",
+			TargetDate:  "2025-12-31",
+			Status:      "ActiveGoals",
+		},
+		StudyRecords: []model.StudyRecord{
+			{ID: 1, GoalID: id, Content: "Study content", DurationMinutes: 30, RecordedAt: "2025-01-01T10:00:00Z"},
+		},
+	}, nil
+}
+
+// MockGoalRepoは、GoalRepositoryインターフェースのモック実装です。

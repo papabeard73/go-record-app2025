@@ -1,0 +1,56 @@
+{{ define "content" }}
+<div class="md:px-40 flex flex-1 justify-center py-5 font-Japanese">
+    <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+        <div class="flex flex-wrap justify-between gap-3 p-4">
+            <div class="flex min-w-72 flex-col gap-3">
+                <p class="text-[#171212] tracking-light text-[32px] font-bold leading-tight">Goal: {{ .Goal.Title }}</p>
+                <p class="text-[#826869] text-sm font-normal leading-normal">期限: {{ .Goal.TargetDate }}</p>
+            </div>
+        </div>
+        <h2 class="text-[#171212] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">学習記録</h2>
+        <div class="px-4 py-3 @container">
+            <div class="flex overflow-x-auto rounded-xl border border-[#e4dddd] bg-white">
+                <table class="flex-1">
+                    <thead>
+                        <tr class="bg-white">
+                            <th class="px-4 py-3 text-left text-[#171212] w-[400px] text-sm font-medium leading-normal">日付</th>
+                            <th class="px-4 py-3 text-left text-[#171212] w-[400px] text-sm font-medium leading-normal">
+                                時間
+                            </th>
+                            <th class="px-4 py-3 text-left text-[#171212] w-[400px] text-sm font-medium leading-normal">
+                                内容
+                            </th>
+                            <th class="px-4 py-3 text-left text-[#171212] w-60 text-[#826869] text-sm font-medium leading-normal">
+                                操作
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range .StudyRecords }}
+                        <tr class="border-t border-t-[#e4dddd]">
+                            <td class="h-[72px] px-4 py-2 w-[400px] text-[#826869] text-sm font-normal leading-normal">
+                                {{ .RecordedAt }}
+                            </td>
+                            <td class="h-[72px] px-4 py-2 w-[400px] text-[#826869] text-sm font-normal leading-normal"> {{ .DurationMinutes }}</td>
+                            <td class="h-[72px] px-4 py-2 w-[400px] text-[#826869] text-sm font-normal leading-normal">
+                                {{ .Content }}
+                            </td>
+                            <td class="h-[72px] px-4 py-2 w-60 text-sm font-bold leading-normal tracking-[0.015em]">
+                                <a href="#" class="text-[#ea2832]"><button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-6 px-2 bg-[#C24F78] text-[#fcf8f8] text-sm font-medium leading-normal w-fit"><span class="truncate">編集</span></button></a>
+                                <a href="#" class="text-[#ea2832]"><button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-6 mt-1 px-2 bg-[#56423E] text-[#fcf8f8] text-sm font-medium leading-normal w-fit"><span class="truncate">削除</span></button>
+                            </td>
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p class="text-[#826869] text-sm font-normal leading-normal pb-3 pt-1 px-4">合計時間: 6.5 hours</p>
+        <div class="flex px-4 py-3 justify-end">
+            <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 bg-[#ea2832] text-[#fcf8f8] text-sm font-medium leading-normal tracking-[0.015em]">
+                <span class="truncate">記録を追加</span>
+            </button>
+        </div>
+    </div>
+</div>
+{{ end }}

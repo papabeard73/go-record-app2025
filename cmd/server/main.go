@@ -40,6 +40,7 @@ func main() {
 	// HTTPサーバーを設定
 	http.HandleFunc("/", h.ListGoals)
 	http.HandleFunc("/goals/new", h.AddNewGoals)
+	http.HandleFunc("/goals/detail", h.DetailGoals)
 	//
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
