@@ -19,11 +19,16 @@ type StudyRecord struct {
 	ID              int
 	GoalID          int
 	Content         string
-	DurationMinutes int
+	DurationMinutes int // 分単位
 	RecordedAt      string
 }
 type GoalDetailData struct {
 	Goal Goal
 	// 他の必要なフィールドを追加できます
 	StudyRecords []StudyRecord
+}
+
+type AddRecordPageData struct {
+	GoalID    int
+	GoalTitle string
 }

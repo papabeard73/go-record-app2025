@@ -33,3 +33,15 @@ func TestDetailGoals(t *testing.T) {
 	assert.Equal(t, "Study content", goal.StudyRecords[0].Content)
 	assert.Equal(t, 30, goal.StudyRecords[0].DurationMinutes)
 }
+func TestAddNewRecord(t *testing.T) {
+	mockRepo := &test.MockGoalRepo{}
+	svc := service.NewGoalService(mockRepo)
+
+	record := test.MockStudyRecord() // モックのStudyRecordを取得する関数がtestパッケージにある前提
+
+	err := svc.AddNewRecord(record)
+
+	assert.NoError(t, err)
+	assert.True(t, mockRepo.SaveRecordCalled, "SaveRecord should be called")
+	assert.Equal(t, record, mockRepo.SavedRecord, "Saved record should match input")
+}

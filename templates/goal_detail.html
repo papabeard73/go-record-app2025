@@ -47,9 +47,11 @@
         </div>
         <p class="text-[#826869] text-sm font-normal leading-normal pb-3 pt-1 px-4">合計時間: 6.5 hours</p>
         <div class="flex px-4 py-3 justify-end">
-            <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 bg-[#ea2832] text-[#fcf8f8] text-sm font-medium leading-normal tracking-[0.015em]">
-                <span class="truncate">記録を追加</span>
-            </button>
+            <a href="/records/new?id={{ .Goal.ID }}">
+                <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 bg-[#ea2832] text-[#fcf8f8] text-sm font-medium leading-normal tracking-[0.015em]">
+                    <span class="truncate">記録を追加</span>
+                </button>
+            </a>
         </div>
     </div>
 </div>

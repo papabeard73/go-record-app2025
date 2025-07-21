@@ -66,3 +66,10 @@ func (s *GoalService) DetailGoals(id int) (model.GoalDetailData, error) {
 	}
 	return goal, nil
 }
+
+// AddNewRecordは、目標に新しい学習記録を追加するメソッドです。
+// このメソッドは、学習記録のデータを受け取り、
+// リポジトリを通じてデータベースに保存します。
+func (s *GoalService) AddNewRecord(record model.StudyRecord) error {
+	return s.Repo.SaveRecord(record)
+}

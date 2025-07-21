@@ -4,7 +4,10 @@ import (
 	"go-record-app2025/internal/model"
 )
 
-type MockGoalRepo struct{}
+type MockGoalRepo struct {
+	SaveRecordCalled bool
+	SavedRecord      model.StudyRecord
+}
 
 func (m *MockGoalRepo) GetAllGoals() ([]model.Goal, error) {
 	return []model.Goal{
@@ -41,3 +44,17 @@ func (m *MockGoalRepo) GetGoalByID(id int) (model.GoalDetailData, error) {
 }
 
 // MockGoalRepoは、GoalRepositoryインターフェースのモック実装です。
+func (m *MockGoalRepo) SaveRecord(record model.StudyRecord) error {
+	// テスト用なので何もしない or 必要ならモックの挙動を書く
+	return nil
+}
+
+func MockStudyRecord() model.StudyRecord {
+	return model.StudyRecord{
+		ID:              1,
+		GoalID:          1,
+		Content:         "Mock Study Record",
+		DurationMinutes: 30,
+		RecordedAt:      "2025-01-01T10:00:00Z",
+	}
+}

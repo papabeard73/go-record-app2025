@@ -112,3 +112,75 @@ func (h *GoalHandler) DetailGoals(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// AddNewRecordは、目標に新しいレコードを追加するハンドラー関数です。
+// この関数は、目標のIDをURLパラメータから取得し、
+// 新しいレコードのデータをフォームから受け取り、GoalServiceを通じてレコードを追加します。
+// レコードの追加が成功した場合、目標の詳細ページにリダイレクトします。
+func (h *GoalHandler) AddNewRecord(w http.ResponseWriter, r *http.Request) {
+	goalID := r.URL.Query().Get("id")
+
+	if goalID == "" {
+		http.Error(w, "目標IDが指定されていません", http.StatusBadRequest)
+		return
+	}
+	id, err := strconv.Atoi(goalID)
+	if err != nil {
+		http.Error(w, "無効な目標ID", http.StatusBadRequest)
+		return
+	}
+
+	// DBから目標データを取得
+	goalDetail, err := h.GoalService.DetailGoals(id)
+	if err != nil {
+		http.Error(w, "目標が見つからないよ！", http.StatusNotFound)
+		return
+	}
+
+	pageData := model.AddRecordPageData{
+		GoalID:    id,
+		GoalTitle: goalDetail.Goal.Title,
+	}
+
+	if r.Method == http.MethodGet {
+		tmpl := template.Must(template.New("layout.html").Funcs(template.FuncMap{
+			"eq": func(a, b string) bool { return a == b },
+		}).ParseFiles("templates/layout.html", "templates/add_record.html"))
+		err := tmpl.ExecuteTemplate(w, "layout.html", pageData)
+		if err != nil {
+			http.Error(w, "テンプレート描画エラー", http.StatusInternalServerError)
+			log.Println("execute error:", err)
+			return
+		}
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "フォーム解析エラー", http.StatusBadRequest)
+			return
+		}
+
+		durationMinutes, err := strconv.Atoi(r.FormValue("duration_minutes"))
+		if err != nil {
+			http.Error(w, "勉強時間は数字で入力してね！", http.StatusBadRequest)
+			return
+		}
+		record := model.StudyRecord{
+			GoalID:          pageData.GoalID,
+			DurationMinutes: durationMinutes,
+			Content:         r.FormValue("content"),
+			RecordedAt:      r.FormValue("date"),
+		}
+
+		err = h.GoalService.AddNewRecord(record)
+		if err != nil {
+			log.Println("SaveRecordでエラー:", err)
+			log.Println("goalID:", goalID)
+			http.Error(w, "レコード追加失敗", http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/goals/detail?id="+goalID, http.StatusSeeOther)
+	}
+}

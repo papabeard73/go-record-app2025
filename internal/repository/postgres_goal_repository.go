@@ -96,3 +96,20 @@ func (r *PostgresGoalRepository) GetGoalByID(id int) (model.GoalDetailData, erro
 	}
 	return goal, nil
 }
+
+// SaveRecordは、学習記録をデータベースに保存するメソッドです。
+// このメソッドは、学習記録のデータを受け取り、
+// データベースに保存します。
+// 学習記録の内容、学習時間、記録日時を含む必要があります。
+// エラーが発生した場合は、エラーを返します。
+func (r *PostgresGoalRepository) SaveRecord(record model.StudyRecord) error {
+	_, err := r.DB.Exec(`
+		INSERT INTO study_records (goal_id, content, duration_minutes, recorded_at)
+		VALUES ($1, $2, $3, $4)
+	`, record.GoalID, record.Content, record.DurationMinutes, record.RecordedAt)
+	if err != nil {
+		log.Printf("SaveRecord error: %v, goal_id=%v, content=%v, duration_minutes=%v, recorded_at=%v",
+			err, record.GoalID, record.Content, record.DurationMinutes, record.RecordedAt)
+	}
+	return err
+}
