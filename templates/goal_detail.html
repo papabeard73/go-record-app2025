@@ -2,12 +2,25 @@
 <div class="md:px-40 flex flex-1 justify-center py-5 font-Japanese">
     <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
         <div class="flex flex-wrap justify-between gap-3 p-4">
-            <div class="flex min-w-72 flex-col gap-3">
+            <div class="flex min-w-72 flex-col gap-1">
                 <p class="text-[#171212] tracking-light text-[32px] font-bold leading-tight">Goal: {{ .Goal.Title }}</p>
                 <p class="text-[#826869] text-sm font-normal leading-normal">期限: {{ .Goal.TargetDate }}</p>
+                <p class="text-[#826869] text-sm font-normal leading-normal">ステータス: {{ .Goal.Status }}</p>
+            </div>
+            <div class="flex flex-1 gap-3 flex-wrap py-3 justify-end font-Japanese">
+                <a href="/goals/edit?id={{ .Goal.ID }}">
+                    <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#C24F78] text-[#fcf8f8] text-sm font-bold leading-normal tracking-[0.015em]">
+                        <span class="truncate">編集</span>
+                    </button>
+                </a>
             </div>
         </div>
+        <div class="flex flex-col gap-3 px-4 py-3">
+            <p class="text-[#171212] text-base font-medium leading-normal">目標の説明</p>
+            <p class="text-[#826869] text-sm font-normal leading-normal">{{ .Goal.Description }}</p>
+        </div>
         <h2 class="text-[#171212] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">学習記録</h2>
+
         <div class="px-4 py-3 @container">
             <div class="flex overflow-x-auto rounded-xl border border-[#e4dddd] bg-white">
                 <table class="flex-1">

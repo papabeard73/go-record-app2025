@@ -37,11 +37,13 @@ func main() {
 	// ハンドラーは、HTTPリクエストを処理するためのもの
 	h := handler.NewGoalHandler(svc)
 
-	// HTTPサーバーを設定
+	// ルーティング（どのURLにどのハンドラーを割り当てるか）
 	http.HandleFunc("/", h.ListGoals)
 	http.HandleFunc("/goals/new", h.AddNewGoals)
 	http.HandleFunc("/goals/detail", h.DetailGoals)
 	http.HandleFunc("/records/new", h.AddNewRecord)
+	http.HandleFunc("/goals/edit", h.EditGoal)
+	http.HandleFunc("/goals/delete", h.DeleteGoal)
 	//
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 

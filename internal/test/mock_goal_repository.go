@@ -45,7 +45,8 @@ func (m *MockGoalRepo) GetGoalByID(id int) (model.GoalDetailData, error) {
 
 // MockGoalRepoは、GoalRepositoryインターフェースのモック実装です。
 func (m *MockGoalRepo) SaveRecord(record model.StudyRecord) error {
-	// テスト用なので何もしない or 必要ならモックの挙動を書く
+	m.SaveRecordCalled = true
+	m.SavedRecord = record
 	return nil
 }
 
@@ -57,4 +58,13 @@ func MockStudyRecord() model.StudyRecord {
 		DurationMinutes: 30,
 		RecordedAt:      "2025-01-01T10:00:00Z",
 	}
+}
+
+func (m *MockGoalRepo) DeleteGoal(id int) error {
+	// テスト用だから何もしなくてOK！
+	return nil
+}
+func (m *MockGoalRepo) UpdateGoal(goal model.Goal) error {
+	// テスト用なので何もしない or 必要ならモックの挙動を書く
+	return nil
 }

@@ -184,3 +184,91 @@ func (h *GoalHandler) AddNewRecord(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/goals/detail?id="+goalID, http.StatusSeeOther)
 	}
 }
+
+// EditGoalは、目標の編集を行うハンドラー関数です。
+// この関数は、目標のIDをURLパラメータから取得し、
+// 目標の詳細をGoalServiceを通じて取得します。
+func (h *GoalHandler) EditGoal(w http.ResponseWriter, r *http.Request) {
+	goalID := r.URL.Query().Get("id")
+	// log.Println("EditGoal called with goalID:", goalID)
+	// log.Println("EditGoal呼ばれた！method:", r.Method)
+	if goalID == "" {
+		http.Error(w, "目標IDが指定されていません", http.StatusBadRequest)
+		return
+	}
+	id, err := strconv.Atoi(goalID)
+	if err != nil {
+		http.Error(w, "無効な目標ID", http.StatusBadRequest)
+		return
+	}
+
+	if r.Method == http.MethodGet {
+		goal, err := h.GoalService.DetailGoals(id)
+
+		// log.Println("Retrieved goal:", goal)
+		if err != nil {
+			http.Error(w, "目標の詳細取得失敗", http.StatusInternalServerError)
+			return
+		}
+		tmpl := template.Must(template.New("layout.html").Funcs(template.FuncMap{
+			"eq": func(a, b string) bool { return a == b },
+		}).ParseFiles("templates/layout.html", "templates/goal_edit.html"))
+		err = tmpl.ExecuteTemplate(w, "layout.html", goal)
+		if err != nil {
+			http.Error(w, "テンプレート描画エラー", http.StatusInternalServerError)
+			log.Println("execute error:", err)
+			return
+		}
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "フォーム解析エラー", http.StatusBadRequest)
+			return
+		}
+
+		goal := model.Goal{
+			ID:          id,
+			Title:       r.FormValue("title"),
+			Description: r.FormValue("description"),
+			Status:      r.FormValue("status"),
+			UserID:      1, // 今は仮に固定
+			TargetDate:  r.FormValue("target_date"),
+		}
+
+		err = h.GoalService.UpdateGoal(goal)
+		if err != nil {
+			log.Println("UpdateGoalでエラー:", err)
+			http.Error(w, "目標更新失敗", http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/goals/detail?id="+goalID, http.StatusSeeOther)
+	}
+}
+
+// DeleteGoalは、目標を削除するハンドラー関数です。
+// この関数は、目標のIDをURLパラメータから取得し
+// GoalServiceを通じて目標を削除します。
+func (h *GoalHandler) DeleteGoal(w http.ResponseWriter, r *http.Request) {
+	goalID := r.URL.Query().Get("id")
+	if goalID == "" {
+		http.Error(w, "目標IDが指定されていません", http.StatusBadRequest)
+		return
+	}
+	id, err := strconv.Atoi(goalID)
+	if err != nil {
+		http.Error(w, "無効な目標ID", http.StatusBadRequest)
+		return
+	}
+
+	err = h.GoalService.DeleteGoal(id)
+	if err != nil {
+		log.Println("DeleteGoalでエラー:", err)
+		http.Error(w, "目標削除失敗", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}

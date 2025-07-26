@@ -113,3 +113,33 @@ func (r *PostgresGoalRepository) SaveRecord(record model.StudyRecord) error {
 	}
 	return err
 }
+
+// UpdateGoalは、目標の情報を更新するメソッドです。
+// このメソッドは、目標のIDを受け取り、
+// 目標のタイトル、説明、ステータス、ターゲット日を更新します。
+// 更新が成功した場合はnilを返し、
+// 失敗した場合はエラーを返します。
+func (r *PostgresGoalRepository) UpdateGoal(goal model.Goal) error {
+	_, err := r.DB.Exec(`
+		UPDATE goals
+		SET title = $1, description = $2, status = $3, target_date = $4
+		WHERE id = $5
+	`, goal.Title, goal.Description, goal.Status, goal.TargetDate, goal.ID)
+	if err != nil {
+		log.Printf("UpdateGoal error: %v, goal_id=%v", err, goal.ID)
+	}
+	return err
+}
+
+// DeleteGoalは、目標を削除するメソッドです。
+// このメソッドは、目標のIDを受け取り、
+// データベースから目標を削除します。
+// 削除が成功した場合はnilを返し、
+// 失敗した場合はエラーを返します。
+func (r *PostgresGoalRepository) DeleteGoal(id int) error {
+	_, err := r.DB.Exec("DELETE FROM goals WHERE id = $1", id)
+	if err != nil {
+		log.Printf("DeleteGoal error: %v, goal_id=%v", err, id)
+	}
+	return err
+}

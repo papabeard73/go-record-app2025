@@ -73,3 +73,14 @@ func (s *GoalService) DetailGoals(id int) (model.GoalDetailData, error) {
 func (s *GoalService) AddNewRecord(record model.StudyRecord) error {
 	return s.Repo.SaveRecord(record)
 }
+
+func (s *GoalService) UpdateGoal(goal model.Goal) error {
+	return s.Repo.UpdateGoal(goal)
+}
+
+// DeleteGoalは、目標を削除するメソッドです。
+// このメソッドは、目標のIDを受け取り、リポジトリを通じて
+// データベースから目標を削除します。
+func (s *GoalService) DeleteGoal(id int) error {
+	return s.Repo.DeleteGoal(id)
+}
