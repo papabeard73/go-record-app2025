@@ -84,3 +84,18 @@ func (s *GoalService) UpdateGoal(goal model.Goal) error {
 func (s *GoalService) DeleteGoal(id int) error {
 	return s.Repo.DeleteGoal(id)
 }
+
+// DeleteRecordは、学習記録を削除するメソッドです。
+// このメソッドは、学習記録のIDを受け取り、リポジトリを通じて
+// データベースから学習記録を削除します。
+func (s *GoalService) DeleteRecord(id int) error {
+	return s.Repo.DeleteRecord(id)
+}
+
+func (s *GoalService) GetRecordByID(id int) (model.StudyRecord, error) {
+	return s.Repo.GetRecordByID(id)
+}
+
+func (s *GoalService) UpdateRecord(record model.StudyRecord) error {
+	return s.Repo.UpdateRecord(record)
+}

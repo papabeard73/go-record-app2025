@@ -44,6 +44,8 @@ func main() {
 	http.HandleFunc("/records/new", h.AddNewRecord)
 	http.HandleFunc("/goals/edit", h.EditGoal)
 	http.HandleFunc("/goals/delete", h.DeleteGoal)
+	http.HandleFunc("/records/edit", h.EditRecord)
+	http.HandleFunc("/records/delete", h.DeleteRecord)
 	//
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 

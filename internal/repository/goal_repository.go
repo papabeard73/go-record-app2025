@@ -9,4 +9,7 @@ type GoalRepository interface {
 	SaveRecord(record model.StudyRecord) error
 	UpdateGoal(goal model.Goal) error
 	DeleteGoal(id int) error
+	DeleteRecord(id int) error
+	GetRecordByID(id int) (model.StudyRecord, error)
+	UpdateRecord(record model.StudyRecord) error
 }

@@ -145,7 +145,7 @@ func (h *GoalHandler) AddNewRecord(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		tmpl := template.Must(template.New("layout.html").Funcs(template.FuncMap{
 			"eq": func(a, b string) bool { return a == b },
-		}).ParseFiles("templates/layout.html", "templates/add_record.html"))
+		}).ParseFiles("templates/layout.html", "templates/record_add.html"))
 		err := tmpl.ExecuteTemplate(w, "layout.html", pageData)
 		if err != nil {
 			http.Error(w, "テンプレート描画エラー", http.StatusInternalServerError)
@@ -271,4 +271,128 @@ func (h *GoalHandler) DeleteGoal(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+// EditRecordは、目標の学習記録を編集するハンドラー関数です。
+// この関数は、学習記録のIDをURLパラメータから取得し、
+// 学習記録の詳細をGoalServiceを通じて取得します。
+func (h *GoalHandler) EditRecord(w http.ResponseWriter, r *http.Request) {
+	recordID := r.URL.Query().Get("id")
+	if recordID == "" {
+		http.Error(w, "学習記録IDが指定されていません", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(recordID)
+	if err != nil {
+		http.Error(w, "無効な学習記録ID", http.StatusBadRequest)
+		return
+	}
+
+	if r.Method == http.MethodGet {
+		record, err := h.GoalService.GetRecordByID(id)
+		// fmt.Println(record)
+		if err != nil {
+			http.Error(w, "学習記録の詳細取得失敗", http.StatusInternalServerError)
+			return
+		}
+		tmpl := template.Must(template.New("layout.html").Funcs(template.FuncMap{
+			"eq": func(a, b string) bool { return a == b },
+		}).ParseFiles("templates/layout.html", "templates/record_edit.html"))
+		err = tmpl.ExecuteTemplate(w, "layout.html", record)
+		if err != nil {
+			http.Error(w, "テンプレート描画エラー", http.StatusInternalServerError)
+			log.Println("execute error:", err)
+			return
+		}
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "フォーム解析エラー", http.StatusBadRequest)
+			return
+		}
+
+		// まず元データを取得
+		record, err := h.GoalService.GetRecordByID(id)
+		if err != nil {
+			http.Error(w, "学習記録の詳細取得失敗", http.StatusInternalServerError)
+			return
+		}
+
+		goalID := record.GoalID
+		if goalID == 0 {
+			http.Error(w, "学習記録に関連する目標が見つかりません", http.StatusBadRequest)
+			return
+		}
+		// フォームからのデータを取得
+		recordedAt := r.FormValue("date")
+		if recordedAt == "" {
+			recordedAt = record.RecordedAt // 既存の値を使用
+		}
+
+		durationMinutes, err := strconv.Atoi(r.FormValue("duration_minutes"))
+		if err != nil {
+			http.Error(w, "勉強時間は数字で入力してね！", http.StatusBadRequest)
+			return
+		}
+		if durationMinutes <= 0 {
+			http.Error(w, "勉強時間は1分以上で入力してね！", http.StatusBadRequest)
+			return
+		}
+
+		content := r.FormValue("content")
+		if content == "" {
+			content = record.Content // 既存の値を使用
+		}
+
+		record = model.StudyRecord{
+			ID:              id,
+			GoalID:          goalID,
+			RecordedAt:      recordedAt,
+			Content:         content,
+			DurationMinutes: durationMinutes,
+		}
+
+		err = h.GoalService.UpdateRecord(record)
+		if err != nil {
+			log.Println("UpdateRecordでエラー:", err)
+			http.Error(w, "学習記録更新失敗", http.StatusInternalServerError)
+			return
+		}
+
+		http.Redirect(w, r, "/goals/detail?id="+strconv.Itoa(record.GoalID), http.StatusSeeOther)
+	}
+}
+
+// DeleteRecordは、目標の学習記録を削除するハンドラー関数です。
+// この関数は、学習記録のIDをURLパラメータから取得し、
+// GoalServiceを通じて学習記録を削除します。
+func (h *GoalHandler) DeleteRecord(w http.ResponseWriter, r *http.Request) {
+	recordID := r.URL.Query().Get("id")
+	if recordID == "" {
+		http.Error(w, "学習記録IDが指定されていません", http.StatusBadRequest)
+		return
+	}
+	id, err := strconv.Atoi(recordID)
+	if err != nil {
+		http.Error(w, "無効な学習記録ID", http.StatusBadRequest)
+		return
+	}
+
+	record, err := h.GoalService.GetRecordByID(id)
+	if err != nil {
+		http.Error(w, "学習記録の詳細取得失敗", http.StatusInternalServerError)
+		return
+	}
+
+	err = h.GoalService.DeleteRecord(id)
+	if err != nil {
+		log.Println("DeleteRecordでエラー:", err)
+		http.Error(w, "学習記録削除失敗", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/goals/detail?id="+strconv.Itoa(record.GoalID), http.StatusSeeOther)
 }

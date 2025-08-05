@@ -143,3 +143,38 @@ func (r *PostgresGoalRepository) DeleteGoal(id int) error {
 	}
 	return err
 }
+
+// DeleteRecordは、学習記録を削除するメソッドです。
+func (r *PostgresGoalRepository) DeleteRecord(id int) error {
+	_, err := r.DB.Exec("DELETE FROM study_records WHERE id = $1", id)
+	if err != nil {
+		log.Printf("DeleteRecord error: %v, record_id=%v", err, id)
+	}
+	return err
+}
+
+func (r *PostgresGoalRepository) GetRecordByID(id int) (model.StudyRecord, error) {
+	var record model.StudyRecord
+	err := r.DB.QueryRow("SELECT id, goal_id, content, duration_minutes, recorded_at FROM study_records WHERE id = $1", id).Scan(
+		&record.ID, &record.GoalID, &record.Content, &record.DurationMinutes, &record.RecordedAt,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return model.StudyRecord{}, nil // 学習記録が見つからない場合は空のStudyRecordを返す
+		}
+		return model.StudyRecord{}, err // その他のエラーはそのまま返す
+	}
+	return record, nil
+}
+
+func (r *PostgresGoalRepository) UpdateRecord(record model.StudyRecord) error {
+	_, err := r.DB.Exec(`
+		UPDATE study_records
+		SET content = $1, duration_minutes = $2, recorded_at = $3
+		WHERE id = $4
+	`, record.Content, record.DurationMinutes, record.RecordedAt, record.ID)
+	if err != nil {
+		log.Printf("UpdateRecord error: %v, record_id=%v", err, record.ID)
+	}
+	return err
+}

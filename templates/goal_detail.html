@@ -49,8 +49,8 @@
                                 {{ .Content }}
                             </td>
                             <td class="h-[72px] px-4 py-2 w-60 text-sm font-bold leading-normal tracking-[0.015em]">
-                                <a href="#" class="text-[#ea2832]"><button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-6 px-2 bg-[#C24F78] text-[#fcf8f8] text-sm font-medium leading-normal w-fit"><span class="truncate">編集</span></button></a>
-                                <a href="#" class="text-[#ea2832]"><button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-6 mt-1 px-2 bg-[#56423E] text-[#fcf8f8] text-sm font-medium leading-normal w-fit"><span class="truncate">削除</span></button>
+                                <a href="/records/edit?id={{ .ID }}" class="text-[#ea2832]"><button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-6 px-2 bg-[#C24F78] text-[#fcf8f8] text-sm font-medium leading-normal w-fit"><span class="truncate">編集</span></button></a>
+                                <a href="/records/delete?id={{ .ID }}" class="text-[#ea2832]"><button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-6 mt-1 px-2 bg-[#56423E] text-[#fcf8f8] text-sm font-medium leading-normal w-fit" onclick="if(confirm('本当に削除しますか？')) { window.location.href='/records/delete?id={{ $.Goal.ID }}'; }"><span class="truncate">削除</span></button>
                             </td>
                         </tr>
                         {{ end }}
