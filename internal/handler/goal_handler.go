@@ -1,12 +1,14 @@
 package handler
 
 import (
+	"fmt"
 	"go-record-app2025/internal/model"
 	"go-record-app2025/internal/service"
 	"html/template"
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // GoalHandlerは、目標に関連するHTTPリクエストを処理するためのハンドラーです。
@@ -28,9 +30,22 @@ func NewGoalHandler(goalService *service.GoalService) *GoalHandler {
 // 取得した目標データは、HTMLテンプレートに渡され、最終的にHTTPレスポンスとしてクライアントに返されます。
 func (h *GoalHandler) ListGoals(w http.ResponseWriter, r *http.Request) {
 	goals, err := h.GoalService.GetGoals()
+
+	// fmt.Println("Goals:", goals)
+
 	if err != nil {
 		http.Error(w, "データ取得失敗", http.StatusInternalServerError)
 		return
+	}
+	// 日付をフォーマットしてテンプレートに渡す
+	for i := range goals.NotStarted {
+		goals.NotStarted[i].TargetDateStr = goals.NotStarted[i].TargetDate.Format("2006-01-02")
+	}
+	for i := range goals.ActiveGoals {
+		goals.ActiveGoals[i].TargetDateStr = goals.ActiveGoals[i].TargetDate.Format("2006-01-02")
+	}
+	for i := range goals.CompletedGoals {
+		goals.CompletedGoals[i].TargetDateStr = goals.CompletedGoals[i].TargetDate.Format("2006-01-02")
 	}
 
 	tmpl := template.Must(template.New("layout.html").Funcs(template.FuncMap{
@@ -57,9 +72,16 @@ func (h *GoalHandler) AddNewGoals(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		targetDateStr := r.FormValue("target_date")
+		targetDate, err := time.Parse("2006-01-02", targetDateStr)
+		if err != nil {
+			http.Error(w, "日付の形式が正しくないよ！", http.StatusBadRequest)
+			return
+		}
+
 		goal := model.Goal{
 			Title:       r.FormValue("title"),
-			TargetDate:  r.FormValue("target_date"),
+			TargetDate:  targetDate,
 			Status:      r.FormValue("status"),
 			Description: r.FormValue("description"),
 			UserID:      1, // 今は仮に固定
@@ -72,7 +94,7 @@ func (h *GoalHandler) AddNewGoals(w http.ResponseWriter, r *http.Request) {
 		// log.Println("status:", r.FormValue("status"))
 		// log.Printf("Received goal: %+v\n", goal)
 
-		err := h.GoalService.CreateGoal(goal)
+		err = h.GoalService.CreateGoal(goal)
 		if err != nil {
 			log.Println("CreateGoal error:", err)
 			http.Error(w, "登録失敗", http.StatusInternalServerError)
@@ -101,6 +123,10 @@ func (h *GoalHandler) DetailGoals(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "目標の詳細取得失敗", http.StatusInternalServerError)
 		return
+	}
+	goal.Goal.TargetDateStr = goal.Goal.TargetDate.Format("2006-01-02")
+	for i := range goal.StudyRecords {
+		goal.StudyRecords[i].RecordedAtStr = goal.StudyRecords[i].RecordedAt.Format("2006-01-02")
 	}
 	tmpl := template.Must(template.New("layout.html").Funcs(template.FuncMap{
 		"eq": func(a, b string) bool { return a == b },
@@ -166,11 +192,17 @@ func (h *GoalHandler) AddNewRecord(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "勉強時間は数字で入力してね！", http.StatusBadRequest)
 			return
 		}
+		recordedAtStr := r.FormValue("date")
+		recordedAt, err := time.Parse("2006-01-02", recordedAtStr)
+		if err != nil {
+			http.Error(w, "日付の形式が正しくないよ！", http.StatusBadRequest)
+			return
+		}
 		record := model.StudyRecord{
 			GoalID:          pageData.GoalID,
 			DurationMinutes: durationMinutes,
 			Content:         r.FormValue("content"),
-			RecordedAt:      r.FormValue("date"),
+			RecordedAt:      recordedAt,
 		}
 
 		err = h.GoalService.AddNewRecord(record)
@@ -204,12 +236,13 @@ func (h *GoalHandler) EditGoal(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 		goal, err := h.GoalService.DetailGoals(id)
-
-		// log.Println("Retrieved goal:", goal)
 		if err != nil {
 			http.Error(w, "目標の詳細取得失敗", http.StatusInternalServerError)
 			return
 		}
+		// 日付をフォーマットしておく
+		goal.Goal.TargetDateStr = goal.Goal.TargetDate.Format("2006-01-02")
+
 		tmpl := template.Must(template.New("layout.html").Funcs(template.FuncMap{
 			"eq": func(a, b string) bool { return a == b },
 		}).ParseFiles("templates/layout.html", "templates/goal_edit.html"))
@@ -228,13 +261,20 @@ func (h *GoalHandler) EditGoal(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		targetDateStr := r.FormValue("target_date")
+		targetDate, err := time.Parse("2006-01-02", targetDateStr)
+		if err != nil {
+			http.Error(w, "日付の形式が正しくないよ！", http.StatusBadRequest)
+			return
+		}
+
 		goal := model.Goal{
 			ID:          id,
 			Title:       r.FormValue("title"),
 			Description: r.FormValue("description"),
 			Status:      r.FormValue("status"),
 			UserID:      1, // 今は仮に固定
-			TargetDate:  r.FormValue("target_date"),
+			TargetDate:  targetDate,
 		}
 
 		err = h.GoalService.UpdateGoal(goal)
@@ -296,6 +336,9 @@ func (h *GoalHandler) EditRecord(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "学習記録の詳細取得失敗", http.StatusInternalServerError)
 			return
 		}
+		// 表示用に日付をフォーマットしておく
+		record.RecordedAtStr = record.RecordedAt.Format("2006-01-02")
+
 		tmpl := template.Must(template.New("layout.html").Funcs(template.FuncMap{
 			"eq": func(a, b string) bool { return a == b },
 		}).ParseFiles("templates/layout.html", "templates/record_edit.html"))
@@ -320,6 +363,7 @@ func (h *GoalHandler) EditRecord(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "学習記録の詳細取得失敗", http.StatusInternalServerError)
 			return
 		}
+		fmt.Println("EditRecordのrecord:", record)
 
 		goalID := record.GoalID
 		if goalID == 0 {
@@ -327,8 +371,14 @@ func (h *GoalHandler) EditRecord(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		// フォームからのデータを取得
-		recordedAt := r.FormValue("date")
-		if recordedAt == "" {
+		recordedAtStr := r.FormValue("date")
+		recordedAt, err := time.Parse("2006-01-02", recordedAtStr)
+		if err != nil {
+			http.Error(w, "日付の形式が正しくないよ！", http.StatusBadRequest)
+			return
+		}
+
+		if recordedAt == (time.Time{}) {
 			recordedAt = record.RecordedAt // 既存の値を使用
 		}
 

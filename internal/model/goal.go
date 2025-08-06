@@ -1,12 +1,15 @@
 package model
 
+import "time"
+
 type Goal struct {
-	ID          int
-	UserID      int
-	Title       string
-	Description string
-	TargetDate  string
-	Status      string // "NotStarted", "ActiveGoals", "CompletedGoals"
+	ID            int
+	UserID        int
+	Title         string
+	Description   string
+	TargetDate    time.Time
+	TargetDateStr string // フォーマット済みのターゲット日付文字列（表示用）
+	Status        string // "NotStarted", "ActiveGoals", "CompletedGoals"
 }
 
 type GoalPageData struct {
@@ -20,7 +23,8 @@ type StudyRecord struct {
 	GoalID          int
 	Content         string
 	DurationMinutes int // 分単位
-	RecordedAt      string
+	RecordedAt      time.Time
+	RecordedAtStr   string // フォーマット済みの記録日時文字列（表示用）
 }
 type GoalDetailData struct {
 	Goal Goal

@@ -1,5 +1,5 @@
 {{ define "content" }}
-<form method="POST" action="/records/edit?id={{ .GoalID }}">
+<form method="POST" action="/records/edit?id={{ .ID }}">
     <div class="px-40 flex flex-1 justify-center py-5">
         <div class="layout-content-container flex flex-col w-[512px] max-w-[512px] py-5 max-w-[960px] flex-1">
             <div class="flex flex-wrap justify-between gap-3 p-4">
@@ -9,7 +9,7 @@
             <div class="flex max-w-[960px] flex-wrap items-end gap-4 px-4 py-3 font-Japanese">
                 <label class="flex flex-col min-w-40 flex-1">
                     <p class="text-[#171212] text-base font-medium leading-normal pb-2">日付（yyyy-mm-dd）</p>
-                    <input placeholder="e.g., 2025-08-31" required class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#171212] focus:outline-0 focus:ring-0 border border-[#e4dddd] bg-white focus:border-[#e4dddd] h-14 placeholder:text-[#826869] p-[15px] text-base font-normal leading-normal" name="date" value="{{ .RecordedAt }}" />
+                    <input type="date" placeholder="e.g., 2025-08-31" required class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#171212] focus:outline-0 focus:ring-0 border border-[#e4dddd] bg-white focus:border-[#e4dddd] h-14 placeholder:text-[#826869] p-[15px] text-base font-normal leading-normal" name="date" value="{{ .RecordedAtStr }}" />
                 </label>
             </div>
             <div class="flex max-w-[960px] flex-wrap items-end gap-4 px-4 py-3 font-Japanese">

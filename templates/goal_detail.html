@@ -4,7 +4,7 @@
         <div class="flex flex-wrap justify-between gap-3 p-4">
             <div class="flex min-w-72 flex-col gap-1">
                 <p class="text-[#171212] tracking-light text-[32px] font-bold leading-tight">Goal: {{ .Goal.Title }}</p>
-                <p class="text-[#826869] text-sm font-normal leading-normal">期限: {{ .Goal.TargetDate }}</p>
+                <p class="text-[#826869] text-sm font-normal leading-normal">期限: {{ .Goal.TargetDateStr }}</p>
                 <p class="text-[#826869] text-sm font-normal leading-normal">ステータス: {{ .Goal.Status }}</p>
             </div>
             <div class="flex flex-1 gap-3 flex-wrap py-3 justify-end font-Japanese">
@@ -42,7 +42,7 @@
                         {{ range .StudyRecords }}
                         <tr class="border-t border-t-[#e4dddd]">
                             <td class="h-[72px] px-4 py-2 w-[400px] text-[#826869] text-sm font-normal leading-normal">
-                                {{ .RecordedAt }}
+                                {{ .RecordedAtStr }}
                             </td>
                             <td class="h-[72px] px-4 py-2 w-[400px] text-[#826869] text-sm font-normal leading-normal"> {{ .DurationMinutes }}</td>
                             <td class="h-[72px] px-4 py-2 w-[400px] text-[#826869] text-sm font-normal leading-normal">
