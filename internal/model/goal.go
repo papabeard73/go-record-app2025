@@ -29,7 +29,8 @@ type StudyRecord struct {
 type GoalDetailData struct {
 	Goal Goal
 	// 他の必要なフィールドを追加できます
-	StudyRecords []StudyRecord
+	StudyRecords  []StudyRecord
+	TotalDuration float64 // 時間単位の合計学習時間
 }
 
 type AddRecordPageData struct {

@@ -15,10 +15,12 @@
                 </a>
             </div>
         </div>
+        {{ if .Goal.Description }}
         <div class="flex flex-col gap-3 px-4 py-3">
             <p class="text-[#171212] text-base font-medium leading-normal">目標の説明</p>
             <p class="text-[#826869] text-sm font-normal leading-normal">{{ .Goal.Description }}</p>
         </div>
+        {{ end }}
         <h2 class="text-[#171212] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">学習記録</h2>
 
         <div class="px-4 py-3 @container">
@@ -28,7 +30,7 @@
                         <tr class="bg-white">
                             <th class="px-4 py-3 text-left text-[#171212] w-[400px] text-sm font-medium leading-normal">日付</th>
                             <th class="px-4 py-3 text-left text-[#171212] w-[400px] text-sm font-medium leading-normal">
-                                時間
+                                時間（分単位）
                             </th>
                             <th class="px-4 py-3 text-left text-[#171212] w-[400px] text-sm font-medium leading-normal">
                                 内容
@@ -39,6 +41,13 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{ if not .StudyRecords }}
+                        <tr>
+                            <td colspan="4" class="h-[72px] px-4 py-2 text-[#826869] text-sm font-normal leading-normal text-center">
+                                学習記録はまだありません！
+                            </td>
+                        </tr>
+                        {{ else }}
                         {{ range .StudyRecords }}
                         <tr class="border-t border-t-[#e4dddd]">
                             <td class="h-[72px] px-4 py-2 w-[400px] text-[#826869] text-sm font-normal leading-normal">
@@ -54,11 +63,14 @@
                             </td>
                         </tr>
                         {{ end }}
+                        {{ end }}
                     </tbody>
                 </table>
             </div>
         </div>
-        <p class="text-[#826869] text-sm font-normal leading-normal pb-3 pt-1 px-4">合計時間: 6.5 hours</p>
+        {{ if .StudyRecords }}
+        <p class="text-[#826869] text-sm font-normal leading-normal pb-3 pt-1 px-4">合計時間: {{ .TotalDuration }} hours</p>
+        {{ end }}
         <div class="flex px-4 py-3 justify-end">
             <a href="/records/new?id={{ .Goal.ID }}">
                 <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 bg-[#ea2832] text-[#fcf8f8] text-sm font-medium leading-normal tracking-[0.015em]">

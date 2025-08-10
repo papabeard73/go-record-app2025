@@ -6,6 +6,7 @@ import (
 	"go-record-app2025/internal/service"
 	"html/template"
 	"log"
+	"math"
 	"net/http"
 	"strconv"
 	"time"
@@ -128,6 +129,14 @@ func (h *GoalHandler) DetailGoals(w http.ResponseWriter, r *http.Request) {
 	for i := range goal.StudyRecords {
 		goal.StudyRecords[i].RecordedAtStr = goal.StudyRecords[i].RecordedAt.Format("2006-01-02")
 	}
+	// 合計学習時間を計算
+	goal.TotalDuration = 0
+	for _, record := range goal.StudyRecords {
+		goal.TotalDuration += float64(record.DurationMinutes)
+	}
+	goal.TotalDuration = float64(goal.TotalDuration) / 60
+	goal.TotalDuration = math.Round(goal.TotalDuration*100) / 100 // 小数点以下2桁で四捨五入
+
 	tmpl := template.Must(template.New("layout.html").Funcs(template.FuncMap{
 		"eq": func(a, b string) bool { return a == b },
 	}).ParseFiles("templates/layout.html", "templates/goal_detail.html"))
