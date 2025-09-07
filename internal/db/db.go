@@ -14,13 +14,7 @@ func Open() *sql.DB {
 	var dsn string
 
 	if env == "production" {
-		dsn = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=require",
-			getenv("DB_USER", ""),
-			getenv("DB_PASSWORD", ""),
-			getenv("DB_HOST", ""),
-			getenv("DB_PORT", "5432"),
-			getenv("DB_NAME", ""),
-		)
+		dsn = os.Getenv("DATABASE_URL")
 	} else {
 		dsn = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable",
 			getenv("DB_USER", "appuser"),
